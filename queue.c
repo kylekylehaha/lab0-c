@@ -21,11 +21,12 @@ void q_free(queue_t *q)
     if (!q)
         return;
     list_ele_t *current_ptr = q->head;
+    list_ele_t *tmp = NULL;
     while (current_ptr) {
-        list_ele_t *tmp = current_ptr;
-        current_ptr = current_ptr->next;
-        free(tmp->value);
-        free(tmp);
+        tmp = current_ptr->next;
+        free(current_ptr->value);
+        free(current_ptr);
+        current_ptr = tmp;
     }
     free(q);
     return;
@@ -35,19 +36,18 @@ bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
     int len = strlen(s);
-    len = len + 1;
     if (!q)
         return false;
     newh = malloc(sizeof(list_ele_t));
     if (!newh)
         return false;
-    newh->value = malloc(sizeof(char) * len);
+    newh->value = malloc(sizeof(char) * (len + 1));
     if (!newh->value) {
         free(newh);
         return false;
     }
     memset(newh->value, 0, len);
-    strncpy(newh->value, s, len - 1);
+    strncpy(newh->value, s, len);
     newh->value[len] = '\0';
     //  Maintain queue structure
     newh->next = q->head;
@@ -63,19 +63,18 @@ bool q_insert_tail(queue_t *q, char *s)
 {
     list_ele_t *newh;
     int len = strlen(s);
-    len += 1;
     if (!q)
         return false;
     newh = malloc(sizeof(list_ele_t));
     if (!newh)
         return false;
-    newh->value = malloc(sizeof(char) * len);
+    newh->value = malloc(sizeof(char) * (len + 1));
     if (!newh->value) {
         free(newh);
         return false;
     }
     memset(newh->value, 0, len);
-    strncpy(newh->value, s, len - 1);
+    strncpy(newh->value, s, len);
     newh->value[len] = '\0';
     newh->next = NULL;
     if (q->size == 0) {
