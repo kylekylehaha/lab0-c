@@ -4,12 +4,13 @@
 
 #include "harness.h"
 #include "queue.h"
+#include "strnatcmp.h"
 
 queue_t *q_new()
 {
     queue_t *q = malloc(sizeof(queue_t));
     if (!q)
-        return 0;
+        return NULL;
     q->size = 0;
     q->head = NULL;
     q->tail = NULL;
@@ -165,7 +166,7 @@ list_ele_t *sort(list_ele_t *start)
 
 void q_sort(queue_t *q)
 {
-    if (!q)
+    if (!q || !q->head)
         return;
     q->head = sort(q->head);
     //  Find new q->tail after sort
