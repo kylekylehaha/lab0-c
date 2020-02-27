@@ -143,7 +143,7 @@ list_ele_t *sort(list_ele_t *start)
     right = sort(right);
 
     for (list_ele_t *merge = NULL; left || right;) {
-        if (!right || (left && strcmp((left->value), (right->value)) < 0)) {
+        if (!right || (left && strnatcmp((left->value), (right->value)) < 0)) {
             if (!merge) {
                 start = merge = left;
             } else {
