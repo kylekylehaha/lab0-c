@@ -93,10 +93,10 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
     if (!q || !q->head)
         return false;
     list_ele_t *tmp = q->head;
-    int len = strlen(q->head->value);
     if (sp) {
         memset(sp, 0, bufsize);
-        strncpy(sp, tmp->value, len);
+        strncpy(sp, tmp->value, bufsize - 1);
+        sp[bufsize - 1] = '\0';
     }
     q->head = q->head->next;
     free(tmp->value);
@@ -130,13 +130,47 @@ void q_reverse(queue_t *q)
     q->head = prev;
 }
 
-/*
- * Sort elements of queue in ascending order
- * No effect if q is NULL or empty. In addition, if q has only one
- * element, do nothing.
- */
+
+list_ele_t *sort(list_ele_t *start)
+{
+    if (!start || !start->next)
+        return start;
+    list_ele_t *left = start;
+    list_ele_t *right = start->next;
+    left->next = NULL;
+
+    left = sort(left);
+    right = sort(right);
+
+    for (list_ele_t *merge = NULL; left || right;) {
+        if (!right || (left && strcmp((left->value), (right->value)) < 0)) {
+            if (!merge) {
+                start = merge = left;
+            } else {
+                merge->next = left;
+                merge = merge->next;
+            }
+            left = left->next;
+        } else {
+            if (!merge) {
+                start = merge = right;
+            } else {
+                merge->next = right;
+                merge = merge->next;
+            }
+            right = right->next;
+        }
+    }
+    return start;
+}
+
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (!q)
+        return;
+    q->head = sort(q->head);
+    //  Find new q->tail after sort
+    while (q->tail->next) {
+        q->tail = q->tail->next;
+    }
 }
