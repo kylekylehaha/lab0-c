@@ -36,7 +36,7 @@ void q_free(queue_t *q)
 bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
-    int len = strlen(s);
+    unsigned int len = strlen(s);
     if (!q)
         return false;
     newh = malloc(sizeof(list_ele_t));
@@ -63,7 +63,7 @@ bool q_insert_head(queue_t *q, char *s)
 bool q_insert_tail(queue_t *q, char *s)
 {
     list_ele_t *newh;
-    int len = strlen(s);
+    unsigned int len = strlen(s);
     if (!q)
         return false;
     newh = malloc(sizeof(list_ele_t));
