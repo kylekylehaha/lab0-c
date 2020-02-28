@@ -130,14 +130,34 @@ void q_reverse(queue_t *q)
     q->head = prev;
 }
 
+void split(list_ele_t *source, list_ele_t **left, list_ele_t **right)
+{
+    if (!source || !source->next) {
+        *left = source;
+        *right = NULL;
+        return;
+    }
+    list_ele_t *slow = source;
+    list_ele_t *fast = source;
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    *left = source;
+    *right = slow->next;
+    slow->next = NULL;
+    return;
+}
+
 
 list_ele_t *sort(list_ele_t *start)
 {
     if (!start || !start->next)
         return start;
-    list_ele_t *left = start;
-    list_ele_t *right = start->next;
-    left->next = NULL;
+    list_ele_t *left;
+    list_ele_t *right;
+
+    split(start, &left, &right);
 
     left = sort(left);
     right = sort(right);
